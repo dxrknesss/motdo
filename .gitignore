@@ -1,1 +1,3 @@
 create_dirs.sh
+vgcore.*
+*.o
