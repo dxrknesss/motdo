@@ -86,20 +86,29 @@ struct Matrix *multiplyMatrix(struct Matrix *firstMatrix,
   return outputMatrix;
 }
 
-void markovChainStep(struct Matrix *matrix, int step) {
-  *matrix = *multiplyMatrix(matrix, matrix);
+void markovChainStep(struct Matrix **matrix, int step) {
+  struct Matrix **temp = matrix;
+  printf("address:%p\n", matrix);
+  // printf("temp address:%d\n", temp);
+  *matrix = multiplyMatrix(*matrix, *matrix);
+  printf("address after multiplication:%p\n", matrix);
   if (matrix == NULL) {
     perror("There was an error with matrix multiplication!");
     return;
   }
 
   printf("P^%d\n", step);
-  printMatrix(matrix);
+  printMatrix(*matrix);
+  printf("\n");
+  printMatrix(*temp);
+  freeMatrixMemory(*temp);
 }
 
 void executeNMarkovChainSteps(struct Matrix *matrix, int steps) {
   for (int i = 0; i < steps; i++) {
-    markovChainStep(matrix, i + 2);
+    printf("Address before markovstep: %p\n", matrix);
+    markovChainStep(&matrix, i + 2);
+    printf("Address after markovstep: %p\n", matrix);
   }
 }
 
@@ -110,6 +119,14 @@ int main() {
   printMatrix(team2Matrix);
 
   executeNMarkovChainSteps(team2Matrix, 5);
+  // printf("\n");
+  // for (int i = 0; i < 5; i++) {
+  //   printf("Address before mult: %d\n", team2Matrix);
+  //   struct Matrix *temp = team2Matrix;
+  //   team2Matrix = multiplyMatrix(team2Matrix, team2Matrix);
+  //   printf("Address after mult: %d\n\n", team2Matrix);
+  //   freeMatrixMemory(temp);
+  // }
 
   freeMatrixMemory(team2Matrix);
 }
