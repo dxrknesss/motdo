@@ -18,20 +18,44 @@ bool simulateRandomEventWithProbability(float probability) {
   return rand() <= RAND_MAX / denominator;
 }
 
-int *experiment(float probability) {
-  int *results = malloc(2 * sizeof(int));
-  bool eventHappened;
-  for (int i = 0; i < 100; i++) {
-    eventHappened = simulateRandomEventWithProbability(probability);
+int *experiment(bool (*eventSimulation)()) {
+  int *results = malloc(sizeof(int) * 2);
+  for (int i = 0; i < 2; i++)
+    results[i] = 0;
+
+  for (int i = 0; i < 10000; i++) {
+    bool eventHappened = (*eventSimulation)();
     results[0] += eventHappened;
     results[1] += !eventHappened;
   }
   return results;
 }
 
+bool simulateOneEvent() { return simulateRandomEventWithProbability(0.25); }
+
+bool simulateMultipleEvents() {
+  return simulateRandomEventWithProbability(0.25) &&
+         simulateRandomEventWithProbability(0.4) &&
+         simulateRandomEventWithProbability(0.15) &&
+         simulateRandomEventWithProbability(0.2);
+}
+
+void simulateAndPrintForOneEvent() {
+  int *results = experiment((*simulateOneEvent));
+  printf("Results for a single event:\nHappened: %d\nNot happened: %d\n",
+         results[0], results[1]);
+  free(results);
+}
+
+void simulateAndPrintForMultipleEvents() {
+  int *results = experiment((*simulateMultipleEvents));
+  printf("Results for a multiple events:\nHappened: %d\nNot happened: %d\n",
+         results[0], results[1]);
+  free(results);
+}
+
 int main() {
   srand(getpid());
-  int *results = experiment(0.25);
-  printf("Ones: %d\n Zeroes: %d\n", results[0], results[1]);
-  free(results);
+  simulateAndPrintForOneEvent();
+  simulateAndPrintForMultipleEvents();
 }
