@@ -13,9 +13,7 @@ float roundToNDigits(int numberToRound, int digits) {
 }
 
 bool simulateRandomEventWithProbability(float probability) {
-  float denominator = 1 / probability;
-  roundToNDigits(denominator, 1);
-  return rand() <= RAND_MAX / denominator;
+  return (double)rand() / RAND_MAX <= probability;
 }
 
 int *experiment(bool (*eventSimulation)()) {
@@ -33,6 +31,7 @@ int *experiment(bool (*eventSimulation)()) {
 
 bool simulateOneEvent() { return simulateRandomEventWithProbability(0.25); }
 
+// FIXME: this is wrong function. it needs to operate in other way
 bool simulateMultipleEvents() {
   return simulateRandomEventWithProbability(0.25) &&
          simulateRandomEventWithProbability(0.4) &&
