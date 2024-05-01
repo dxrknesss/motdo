@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,14 +5,6 @@
 
 float eventProbabilities[4] = {0.25, 0.4, 0.15, 0.2},
       prefixSum[5] = {0, 0.25, 0.65, 0.80, 1};
-
-float roundToNDigits(int numberToRound, int digits) {
-  int denominator = pow(10, digits);
-  numberToRound *= denominator;
-  numberToRound = round(numberToRound);
-  numberToRound /= denominator;
-  return numberToRound;
-}
 
 double generateRandomNumberInclusive() {
   return (double)rand() / (double)RAND_MAX; // generates number from 0 to 1
@@ -34,8 +25,9 @@ void simulateMultipleEvents(int *results) {
 
 int *experiment(void (*eventSimulation)(int *)) {
   int *results = malloc(sizeof(int) * 4);
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 4; i++) {
     results[i] = 0;
+  }
 
   for (int i = 0; i < 10000; i++) {
     (*eventSimulation)(results);
