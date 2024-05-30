@@ -7,7 +7,7 @@
 
 float eventProbabilities[4] = {0.25, 0.4, 0.15, 0.2},
       prefixSum[5] = {0, 0.25, 0.65, 0.80, 1};
-double lambda = 4;
+double lambda = 4, nu = 1, sigma = 3;
 
 double generateRandomNumberInclusive() {
   return rand() / (double)RAND_MAX; // generates number from 0 to 1
@@ -68,6 +68,23 @@ void simulateAndPrintExponentialDistribution() {
   }
 }
 
+double normalDistributionRun() {
+  double number = 0;
+  for (int i = 0; i < 12; i++) {
+    number += generateRandomNumberInclusive();
+  }
+
+  return nu + sigma * (number - 6);
+}
+
+void simulateAndPrintNormalDistribution() {
+  double number;
+  for (int i = 0; i < 100; i++) {
+    number = normalDistributionRun();
+    printf("Iteration %d, %f\n", i, number);
+  }
+}
+
 int main(int argc, char **argv) {
   srand(getpid());
 
@@ -81,5 +98,7 @@ int main(int argc, char **argv) {
     simulateAndPrintForMultipleEvents();
   } else if (!strcmp(argv[1], "expo")) {
     simulateAndPrintExponentialDistribution();
+  } else if (!strcmp(argv[1], "normal")) {
+    simulateAndPrintNormalDistribution();
   }
 }
