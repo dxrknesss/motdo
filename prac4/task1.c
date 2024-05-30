@@ -1,13 +1,16 @@
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 float eventProbabilities[4] = {0.25, 0.4, 0.15, 0.2},
       prefixSum[5] = {0, 0.25, 0.65, 0.80, 1};
+double lambda = 4;
 
 double generateRandomNumberInclusive() {
-  return (double)rand() / (double)RAND_MAX; // generates number from 0 to 1
+  return rand() / (double)RAND_MAX; // generates number from 0 to 1
 }
 
 void simulateSingleEvent(int *results) {
@@ -51,8 +54,32 @@ void simulateAndPrintForMultipleEvents() {
   free(results);
 }
 
-int main() {
+double exponentialDisributionRun() {
+  double randomVariable = generateRandomNumberInclusive();
+
+  return -log(randomVariable) / lambda;
+}
+
+void simulateAndPrintExponentialDistribution() {
+  double number;
+  for (int i = 0; i < 100; i++) {
+    number = exponentialDisributionRun();
+    printf("Iteration %d, %f\n", i, number);
+  }
+}
+
+int main(int argc, char **argv) {
   srand(getpid());
-  simulateAndPrintForOneEvent();
-  simulateAndPrintForMultipleEvents();
+
+  if (argv[1] == NULL) {
+    exit(1);
+  }
+
+  if (!strcmp(argv[1], "single")) {
+    simulateAndPrintForOneEvent();
+  } else if (!strcmp(argv[1], "multi")) {
+    simulateAndPrintForMultipleEvents();
+  } else if (!strcmp(argv[1], "expo")) {
+    simulateAndPrintExponentialDistribution();
+  }
 }
