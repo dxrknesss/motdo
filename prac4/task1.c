@@ -60,9 +60,9 @@ double exponentialDisributionRun() {
   return -log(randomVariable) / lambda;
 }
 
-void simulateAndPrintExponentialDistribution() {
+void simulateAndPrintExponentialDistribution(int nIterations) {
   double number;
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < nIterations; i++) {
     number = exponentialDisributionRun();
     printf("Iteration %d, %f\n", i, number);
   }
@@ -97,8 +97,10 @@ int main(int argc, char **argv) {
   } else if (!strcmp(argv[1], "multi")) {
     simulateAndPrintForMultipleEvents();
   } else if (!strcmp(argv[1], "expo")) {
-    simulateAndPrintExponentialDistribution();
+    simulateAndPrintExponentialDistribution(100);
   } else if (!strcmp(argv[1], "normal")) {
     simulateAndPrintNormalDistribution();
+  } else if (!strcmp(argv[1], "task2")) {
+    simulateAndPrintExponentialDistribution(5);
   }
 }
